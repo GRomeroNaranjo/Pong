@@ -12,17 +12,17 @@ color: 'WHITE'
 };
 
 const user = {
-x: 0,
-y: (canvas.height - 100) / 2,
+x: 0, // left side of canvas
+y: (canvas.height - 100) / 2, // -100 the height of paddle
 width: 10,
 height: 100,
 score: 0,
 color: 'WHITE'
 };
 
-const ai = {
-x: canvas.width - 10,
-y: (canvas.height - 100) / 2,
+const com = {
+x: canvas.width - 10, // - width of paddle
+y: (canvas.height - 100) / 2, // -100 the height of paddle
 width: 10,
 height: 100,
 score: 0,
@@ -66,14 +66,14 @@ ball.speed = 7;
 
 function drawNet() {
 for (let i = 0; i <= canvas.height; i += 15) {
-drawRect(net.x, i, net.width, net.height, net.color);
+drawRect(net.x, net.y + i, net.width, net.height, net.color);
 }
 }
 
-function draw() {drawRect(0, 0, canvas.width, canvas.height, '#000');
+function draw() {
+drawRect(0, 0, canvas.width, canvas.height, 'BLACK');
 drawNet();
-drawRect(user.x, user.y, user.width, user.height, user.color);
-drawRect(ai.x, ai.y, ai.width, ai.height, ai.color);
+drawRect(user.x, user.y, user.width, user.height, user.color);drawRect(com.x, com.y, com.width, com.height, com.color);
 drawArc(ball.x, ball.y, ball.radius, ball.color);
 }
 
@@ -81,41 +81,41 @@ function update() {
 ball.x += ball.velocityX;
 ball.y += ball.velocityY;
 
-// Simple AI to control the ai paddle
+// Simple AI to control the com paddle
 let computerLevel = 0.1;
-ai.y += (ball.y - (ai.y + ai.height / 2)) * computerLevel;
+com.y += (ball.y - (com.y + com.height / 2)) * computerLevel;
 
 if (ball.y + ball.radius > canvas.height || ball.y - ball.radius < 0) {
 ball.velocityY = -ball.velocityY;
 }
 
-let player = (ball.x < canvas.width / 2) ? user : ai;
+let player = (ball.x < canvas.width / 2) ? user : com;
 
 if (collision(ball, player)) {
-// where the ball hit the player
 let collidePoint = ball.y - (player.y + player.height / 2);
 collidePoint = collidePoint / (player.height / 2);
 
-// calculate angle in radian
 let angleRad = (Math.PI / 4) * collidePoint;
 
-// X direction of the ball when it's hit
 let direction = (ball.x < canvas.width / 2) ? 1 : -1;
 ball.velocityX = direction * ball.speed * Math.cos(angleRad);
 ball.velocityY = ball.speed * Math.sin(angleRad);
 
-// speed up the ball every hit
 ball.speed += 0.1;
 }
 
-// Update the score
 if (ball.x - ball.radius < 0) {
-ai.score++;
+com.score++;
 resetBall();
 } else if (ball.x + ball.radius > canvas.width) {
 user.score++;
 resetBall();
 }
+}
+
+function game() {
+update();
+draw();
 }
 
 function collision(b, p) {
@@ -132,13 +132,6 @@ b.right = b.x + b.radius;
 return b.right > p.left && b.top < p.bottom && b.left < p.right && b.bottom > p.top;
 }
 
-function game() {
-update();
-draw();
-}
-
-// number of frames per second
+// call update() and draw() every 50ms
 let framePerSecond = 50;
-
-//call the game function 50 times every 1 Sec
 let loop = setInterval(game, 1000/framePerSecond);[1000]
