@@ -1,0 +1,47 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000;
+    color: #fff;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  #landing-page {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    margin-top: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #555;
+  }
+  
+  #pongCanvas {
+    border: 2px solid #fff;
+    display: none; /* Initially hidden */
+  }
+  
+  .score {
+    color: #fff;
+    font-size: 32px;
+    position: absolute;
+    top: 20px;
+  }
+  
+  .user-score {
+    left: 25%;
+  }
+  
+  .ai-score {
+    right: 25%;
+  }
